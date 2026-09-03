@@ -374,6 +374,68 @@
   @media (max-width:520px){
     .counter-grid{ grid-template-columns:repeat(2,1fr); }
   }
+
+  /* ---------- MINIGAME: UNESCAPABLE NO BUTTON ---------- */
+  .game-card{ padding:2.4rem 1.6rem; text-align:center; }
+  .game-card h3{ font-family:var(--disp); color:var(--pink-dark); font-size:1.5rem; margin-bottom:0.4rem; }
+  .game-card .game-sub{ font-family:var(--body); font-weight:600; color:var(--ink-soft); font-size:0.95rem; min-height:1.4em; }
+  .dodge-arena{ position:relative; height:230px; margin-top:1.6rem; }
+  .dodge-btn{
+    position:absolute; font-family:var(--disp); font-size:1rem; padding:0.85rem 1.9rem;
+    border-radius:999px; cursor:pointer; border:3px solid #fff;
+  }
+  #yesBtn{
+    left:50%; top:50%; transform:translate(-50%,-50%);
+    background:linear-gradient(135deg,var(--mint-dark),var(--mint)); color:#3a5a4c;
+    box-shadow: 0 7px 0 var(--mint-dark), 0 12px 22px rgba(111,207,174,0.35);
+    transition: transform .15s ease, box-shadow .15s ease, left .3s ease, top .3s ease;
+    z-index:2;
+  }
+  #yesBtn:hover{ transform:translate(-50%,-50%) translateY(-3px); }
+  #yesBtn:active{ transform:translate(-50%,-50%) translateY(3px); }
+  #noBtn{
+    left:calc(50% + 90px); top:50%; transform:translate(-50%,-50%);
+    background:linear-gradient(135deg,var(--pink),var(--pink-dark)); color:#fff;
+    box-shadow: 0 6px 0 var(--pink-dark);
+    transition: left .28s cubic-bezier(.3,.9,.4,1.2), top .28s cubic-bezier(.3,.9,.4,1.2);
+    z-index:3;
+  }
+  .yes-celebration{ margin-top:1.4rem; font-family:var(--hand); font-size:1.5rem; color:var(--pink-dark); opacity:0; transform:scale(0.7); transition: opacity .4s ease, transform .4s cubic-bezier(.2,1.4,.4,1); }
+  .yes-celebration.show{ opacity:1; transform:scale(1); }
+
+  /* ---------- MINIGAME: BALLOON POP ---------- */
+  .balloon-sky{ position:relative; height:280px; margin-top:1rem; }
+  .balloon{
+    position:absolute; bottom:-40px; font-size:2.6rem; cursor:pointer; user-select:none;
+    animation: balloon-float 5.5s ease-in-out infinite;
+    filter: drop-shadow(0 8px 10px rgba(140,90,60,0.18));
+    transition: transform .2s ease;
+  }
+  .balloon:hover{ transform:scale(1.08) rotate(-4deg); }
+  @keyframes balloon-float{ 0%,100%{ transform:translateY(0) rotate(-3deg);} 50%{ transform:translateY(-16px) rotate(3deg);} }
+  .balloon.popped{ animation:none; pointer-events:none; opacity:0; transform:scale(1.7); transition: opacity .3s ease, transform .3s ease; }
+  .balloon-sentence{
+    margin-top:0.8rem; display:flex; flex-wrap:wrap; gap:0.5rem; justify-content:center;
+    font-family:var(--disp); font-size:1.15rem; color:var(--pink-dark); min-height:2.4em;
+  }
+  .balloon-word{
+    padding:0.3rem 0.9rem; border-radius:999px; background:#fff; box-shadow: var(--card-shadow-soft);
+    opacity:0; transform:translateY(10px) scale(0.7);
+    transition: opacity .4s cubic-bezier(.2,1.3,.4,1), transform .4s cubic-bezier(.2,1.3,.4,1);
+  }
+  .balloon-word.shown{ opacity:1; transform:translateY(0) scale(1); }
+  .balloon-word.blank{ background:transparent; box-shadow:none; color:transparent; }
+  .balloon-replay{
+    margin-top:1.4rem; font-family:var(--disp); font-size:0.9rem; color:var(--pink-dark);
+    background:#fff; border:2px solid var(--pink-pale); padding:0.55rem 1.4rem; border-radius:999px; cursor:pointer;
+  }
+
+  /* ---------- CONFETTI BURST (shared) ---------- */
+  .confetti-piece{ position:fixed; z-index:45; pointer-events:none; font-size:1.3rem; animation: confetti-fall linear forwards; }
+  @keyframes confetti-fall{
+    0%{ opacity:1; transform:translate(0,0) rotate(0deg) scale(1); }
+    100%{ opacity:0; transform:translate(var(--cx,0px), var(--cy,240px)) rotate(var(--cr,180deg)) scale(0.7); }
+  }
 </style>
 </head>
 <body>
@@ -480,8 +542,43 @@
     </div>
   </section>
 
+  <!-- CHAPTER SIX: BALLOON POP -->
+  <section class="chapter" id="chapter-six">
+    <div class="chapter-head reveal">
+      <span class="eyebrow">Chapter Six 🎈</span>
+      <h2>Pop A Balloon</h2>
+      <div class="divider"></div>
+    </div>
+    <div class="game-card cute-card reveal">
+      <h3>One little surprise per balloon 🎈</h3>
+      <p class="game-sub">Pop them all to reveal the message</p>
+      <div class="balloon-sky" id="balloonSky"></div>
+      <div class="balloon-sentence" id="balloonSentence"></div>
+      <button class="balloon-replay" id="balloonReplay">Play again 🔄</button>
+    </div>
+  </section>
+
+  <!-- CHAPTER SEVEN: THE NO BUTTON -->
+  <section class="chapter" id="chapter-seven">
+    <div class="chapter-head reveal">
+      <span class="eyebrow">Chapter Seven 🥺</span>
+      <h2>One More Question</h2>
+      <div class="divider"></div>
+    </div>
+    <div class="game-card cute-card reveal">
+      <h3>Will you be my Cherie... forever? 🐻</h3>
+      <p class="game-sub" id="dodgeCaption">go on, try to click "No" 👀</p>
+      <div class="dodge-arena" id="dodgeArena">
+        <button class="dodge-btn" id="yesBtn">Yes 💗</button>
+        <button class="dodge-btn" id="noBtn">No</button>
+      </div>
+      <div class="yes-celebration" id="yesCelebration">Yay!! I knew you'd say yes 🥰🎉</div>
+    </div>
+  </section>
+
   <!-- FINAL SCENE -->
   <section id="final">
+
     <span class="eyebrow reveal">Final Scene 🎂</span>
     <div class="final-mascot reveal"><span>🐻💗🐼</span></div>
     <h2 class="reveal">Happy Birthday</h2>
@@ -591,31 +688,21 @@ const SECRET_LETTER = `My Dearest Pallavi ❤️
 
 My Cherie, my Rii,
 
+If you're reading this, you found this little corner I made just for you. 🥹❤️
 
-If you are reading this, it means you found this little magical corner that I created just for you.
+I just wanted you to know how special you are to me. Since you came into my life, even the simplest moments have somehow become my favourite memories.
 
-I wanted to make something special because you are someone very special to me.
+I love your smile, your laugh, your kindness, your little habits, and all the things that make you you.
 
-Since you came into my life, you have brought a different kind of happiness. You make normal days feel special, and even the smallest conversations with you become moments I want to remember.
+Thank you for bringing so much happiness into my life and for becoming such an important part of my story.
 
-I still smile whenever I think about our special moments together. The laughs, the teasing, the random conversations and all the little things that make us who we are.
+Here’s to more laughs, more memories, more silly moments, and many more chapters together. ❤️
 
-I still remember 6 Jan 2026 the day I finally found the courage to tell you how I felt. I was nervous, maybe you felt the same way.
-
-Then came 30 May 2026 the day we officially became boyfriend and girlfriend. That day became one of the most beautiful chapters of my life.
-
-Pallavi, I love the person you are. Your smile, your kindness, your little habits, your laughter, and all the things that make you uniquely you.
-
-Thank you for being my Cherie. Thank you for all the happiness, the memories, and the love you bring into my life.
-
-I hope this is only the beginning of our story. I hope we create many more memories, laugh at many more silly things, and continue writing our journey together.
-
-
-Happy Birthday, my beautiful Pallavi ❤️
+Happy Birthday, my beautiful Pallavi.
 
 Forever yours,
 
-Mads 🐻`;
+Mads 🐻❤️`;
 
 const PASSWORDS = ["cherie", "rii"];
 const HINTS_WRONG = [
@@ -913,7 +1000,7 @@ function openModal(){
 function closeModal(){
   pwModal.classList.remove('open');
   document.body.style.overflow = '';
-  document.getElementById('secret-moon').focus({preventScroll:true});
+  try{ document.getElementById('secret-moon').focus({preventScroll:true}); }catch(e){}
 }
 
 document.getElementById('secret-moon').addEventListener('click', (e)=>{
@@ -988,6 +1075,123 @@ function spawnBlossoms(){
     holder.appendChild(p);
   }
 }
+
+/* ===================== SHARED CONFETTI BURST ===================== */
+function confettiBurst(x, y, opts={}){
+  if(reduceMotion) return;
+  const glyphs = opts.glyphs || ['🎉','💗','✨','🎈','💕'];
+  const count = opts.count || 24;
+  for(let i=0;i<count;i++){
+    const c = document.createElement('span');
+    c.className = 'confetti-piece';
+    c.textContent = glyphs[Math.floor(Math.random()*glyphs.length)];
+    c.style.left = x + 'px';
+    c.style.top = y + 'px';
+    c.style.fontSize = (0.9 + Math.random()*0.9) + 'rem';
+    const angle = Math.random()*Math.PI*2;
+    const dist = 60 + Math.random()*160;
+    c.style.setProperty('--cx', Math.cos(angle)*dist + 'px');
+    c.style.setProperty('--cy', (Math.sin(angle)*dist*0.6 + 120) + 'px');
+    c.style.setProperty('--cr', (Math.random()*360) + 'deg');
+    c.style.animationDuration = (0.8 + Math.random()*0.6) + 's';
+    document.body.appendChild(c);
+    setTimeout(()=> c.remove(), 1500);
+  }
+}
+
+/* ===================== BALLOON POP ===================== */
+const BALLOON_SENTENCE = "You make every single day feel like a celebration ❤️".split(' ');
+const BALLOON_COLORS = ['#FF9DBE','#FFCB9E','#ABEBD2','#D8CBFF','#FFE1AE'];
+let balloonPopped = 0;
+
+function buildBalloonGame(){
+  const sky = document.getElementById('balloonSky');
+  const sentence = document.getElementById('balloonSentence');
+  sky.innerHTML = '';
+  sentence.innerHTML = '';
+  balloonPopped = 0;
+
+  BALLOON_SENTENCE.forEach((word, i)=>{
+    const slot = document.createElement('span');
+    slot.className = 'balloon-word blank';
+    slot.id = 'bword-' + i;
+    slot.textContent = word;
+    sentence.appendChild(slot);
+  });
+
+  const positions = BALLOON_SENTENCE.map((_,i)=> (100 / BALLOON_SENTENCE.length) * i + 4);
+  positions.sort(()=> Math.random()-0.5);
+
+  BALLOON_SENTENCE.forEach((word, i)=>{
+    const b = document.createElement('span');
+    b.className = 'balloon';
+    b.textContent = '🎈';
+    b.style.left = positions[i] + '%';
+    b.style.color = BALLOON_COLORS[i % BALLOON_COLORS.length];
+    b.style.animationDelay = (Math.random()*2) + 's';
+    b.dataset.index = i;
+    b.setAttribute('role','button');
+    b.setAttribute('tabindex','0');
+    b.setAttribute('aria-label','Pop balloon ' + (i+1));
+    const pop = ()=>{
+      if(b.classList.contains('popped')) return;
+      b.classList.add('popped');
+      const rect = b.getBoundingClientRect();
+      confettiBurst(rect.left + rect.width/2, rect.top + rect.height/2, {count:14});
+      const slot = document.getElementById('bword-' + i);
+      slot.classList.remove('blank');
+      slot.classList.add('shown');
+      balloonPopped++;
+    };
+    b.addEventListener('click', pop);
+    b.addEventListener('keydown', (e)=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); pop(); } });
+    sky.appendChild(b);
+  });
+}
+document.getElementById('balloonReplay').addEventListener('click', buildBalloonGame);
+buildBalloonGame();
+
+/* ===================== THE UNESCAPABLE NO BUTTON ===================== */
+const dodgeArena = document.getElementById('dodgeArena');
+const noBtn = document.getElementById('noBtn');
+const yesBtn = document.getElementById('yesBtn');
+const dodgeCaption = document.getElementById('dodgeCaption');
+const yesCelebration = document.getElementById('yesCelebration');
+let dodgeCount = 0;
+let yesAnswered = false;
+const DODGE_TEASES = [
+  'go on, try to click "No" 👀',
+  'so close! 😏',
+  'nice try 🐻',
+  'you can\'t catch me!',
+  'she said what she said 💗',
+  'maybe just click Yes? 🥺',
+  'Yeah... keep trying 😂'
+];
+function moveNoButton(){
+  if(yesAnswered) return;
+  const w = dodgeArena.clientWidth;
+  const h = dodgeArena.clientHeight;
+  const bw = noBtn.offsetWidth || 90;
+  const bh = noBtn.offsetHeight || 44;
+  const x = Math.random() * Math.max(w - bw, 10);
+  const y = Math.random() * Math.max(h - bh, 10);
+  noBtn.style.left = x + 'px';
+  noBtn.style.top = y + 'px';
+  noBtn.style.transform = 'none';
+  dodgeCount++;
+  dodgeCaption.textContent = DODGE_TEASES[Math.min(dodgeCount, DODGE_TEASES.length-1)];
+}
+noBtn.addEventListener('mouseenter', moveNoButton);
+noBtn.addEventListener('touchstart', (e)=>{ e.preventDefault(); moveNoButton(); }, {passive:false});
+noBtn.addEventListener('click', (e)=>{ e.preventDefault(); moveNoButton(); });
+yesBtn.addEventListener('click', ()=>{
+  yesAnswered = true;
+  yesCelebration.classList.add('show');
+  dodgeCaption.textContent = 'best decision ever 💗';
+  const rect = yesBtn.getBoundingClientRect();
+  confettiBurst(rect.left + rect.width/2, rect.top + rect.height/2, {count:30, glyphs:['🎉','💗','🐻','🐼','✨']});
+});
 </script>
 </body>
 </html>
